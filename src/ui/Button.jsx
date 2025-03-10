@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css } from 'styled-components';
 
 const sizes = {
   small: css`
@@ -28,6 +28,10 @@ const variations = {
     &:hover {
       background-color: var(--color-brand-700);
     }
+
+    &:active {
+      transform: translateY(2px);
+    }
   `,
   secondary: css`
     color: var(--color-grey-600);
@@ -37,6 +41,10 @@ const variations = {
     &:hover {
       background-color: var(--color-grey-50);
     }
+
+    &:active {
+      transform: translateY(2px);
+    }
   `,
   danger: css`
     color: var(--color-red-100);
@@ -45,5 +53,33 @@ const variations = {
     &:hover {
       background-color: var(--color-red-800);
     }
+
+    &:active {
+      transform: translateY(2px);
+    }
   `,
 };
+
+const Button = styled.button`
+  border: none;
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow-sm);
+
+  &:hover {
+    background-color: var(--color-brand-700);
+  }
+
+  &:active {
+    transform: translateY(2px);
+  }
+
+  ${(props) => sizes[props.size]}
+  ${(props) => variations[props.variation]}
+`;
+
+Button.defaultProps = {
+  variation: 'primary',
+  size: 'medium',
+};
+
+export default Button;
