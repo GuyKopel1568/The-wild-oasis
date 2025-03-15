@@ -66,7 +66,7 @@ function CreateCabinForm() {
   });
 
   function onSubmit(data) {
-    mutate(data);
+    mutate({ ...data, image: data.image[0] });
   }
 
   function onError(errors) {
@@ -82,6 +82,7 @@ function CreateCabinForm() {
           {...register('name', {
             required: 'This field is required',
           })}
+          disabled={isCreating}
         />
       </FormRow>
 
@@ -96,6 +97,7 @@ function CreateCabinForm() {
               message: 'Capacity should be at least 1',
             },
           })}
+          disabled={isCreating}
         />
       </FormRow>
 
@@ -103,6 +105,7 @@ function CreateCabinForm() {
         <Input
           type="number"
           id="regularPrice"
+          disabled={isCreating}
           {...register('regularPrice', {
             required: 'This field is required',
             min: {
@@ -117,6 +120,7 @@ function CreateCabinForm() {
         <Input
           type="number"
           id="discount"
+          disabled={isCreating}
           defaultValue={0}
           {...register('discount', {
             required: 'This field is required',
@@ -134,6 +138,7 @@ function CreateCabinForm() {
         <Textarea
           type="number"
           id="description"
+          disabled={isCreating}
           defaultValue=""
           {...register('description', {
             required: 'This field is required',
@@ -143,7 +148,13 @@ function CreateCabinForm() {
 
       <FormRow>
         <Label htmlFor="image">Cabin photo</Label>
-        <FileInput id="image" accept="image/*" />
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register('image', {
+            required: 'This field is required',
+          })}
+        />
       </FormRow>
 
       <StyledFormRow>
