@@ -11,6 +11,7 @@ import Checkbox from '../../ui/Checkbox';
 import BookingDataBox from '../../features/bookings/BookingDataBox';
 import { useMoveBack } from '../../hooks/useMoveBack';
 import { useBooking } from '../bookings/useBooking';
+import { useSettings } from '../settings/useSettings';
 import { useEffect, useState } from 'react';
 import { formatCurrency } from '../../utils/helpers';
 import { useCheckin } from './useCheckin';
@@ -25,8 +26,12 @@ const Box = styled.div`
 
 function CheckinBooking() {
   const [confirmedPaid, setConfirmedPaid] = useState(false);
-  const { booking, isLoading } = useBooking();
+  const [addbreakfast, setAddBreakfast] = useState(false);
+
   const moveBack = useMoveBack();
+
+  const { settings, isLoading: isLoadingSettings } = useSettings();
+  const { booking, isLoading } = useBooking();
   const { checkin, isCheckingIn } = useCheckin();
 
   useEffect(() => {
@@ -46,9 +51,13 @@ function CheckinBooking() {
     numNights,
   } = booking;
 
+  const optionalBreakfastPrice =
+    settings.breakfastPrice * numNights * numGuests;
+
+  console.log('optionalBreakfastPrice', optionalBreakfastPrice);
+
   function handleCheckin() {
     if (!confirmedPaid) return;
-
     checkin(bookingId);
   }
 
@@ -60,6 +69,21 @@ function CheckinBooking() {
       </Row>
       <BookingDataBox booking={booking} />
 
+      {!hasBreakfast && (
+        <Box>
+          <Checkbox
+            checked={addbreakfast}
+            onChange={() => {
+              setAddBreakfast((add) => !add);
+              setConfirmedPaid(false);
+            }}
+            id="breakfast"
+          >
+            Want to add breakfast for {formatCurrency(optionalBreakfastPrice)}?
+          </Checkbox>
+        </Box>
+      )}
+
       <Box>
         <Checkbox
           checked={confirmedPaid}
@@ -68,7 +92,7 @@ function CheckinBooking() {
           id="confirm"
         >
           I confirm that {guests.fullName} has paid the total amount
-          {formatCurrency(totalPrice)} for {numGuests} guests for {numNights}
+          {formatCurrency(totalPrice)} for {numGuests} guests for {numNights}{' '}
           nights.
         </Checkbox>
       </Box>
