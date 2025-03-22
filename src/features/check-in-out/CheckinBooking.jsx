@@ -38,7 +38,7 @@ function CheckinBooking() {
     setConfirmedPaid(booking?.isPaid ?? false);
   }, [booking]);
 
-  if (isLoading) {
+  if (isLoading || isLoadingSettings) {
     return <Spinner />;
   }
 
@@ -54,11 +54,21 @@ function CheckinBooking() {
   const optionalBreakfastPrice =
     settings.breakfastPrice * numNights * numGuests;
 
-  console.log('optionalBreakfastPrice', optionalBreakfastPrice);
-
   function handleCheckin() {
     if (!confirmedPaid) return;
-    checkin(bookingId);
+
+    if (addbreakfast) {
+      checkin({
+        bookingId,
+        breakfast: {
+          hasBreakfast: true,
+          extrasPrice: optionalBreakfastPrice,
+          totalPrice: totalPrice + optionalBreakfastPrice,
+        },
+      });
+    } else {
+      checkin({ bookingId, breakfast: {} });
+    }
   }
 
   return (
@@ -91,9 +101,10 @@ function CheckinBooking() {
           disabled={confirmedPaid || isCheckingIn}
           id="confirm"
         >
-          I confirm that {guests.fullName} has paid the total amount
-          {formatCurrency(totalPrice)} for {numGuests} guests for {numNights}{' '}
-          nights.
+          I confirm that {guests.fullName} has paid the total amount of {''}
+          {!addbreakfast
+            ? formatCurrency(totalPrice)
+            : `${formatCurrency(totalPrice + optionalBreakfastPrice)} (${formatCurrency(totalPrice)} + ${formatCurrency(optionalBreakfastPrice)}) `}
         </Checkbox>
       </Box>
 
