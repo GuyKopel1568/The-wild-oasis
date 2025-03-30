@@ -17,7 +17,15 @@ function LoginForm() {
       console.error('Error: missing email or password');
       return;
     }
-    login({ email, password });
+    login(
+      { email, password },
+      {
+        onSettled: () => {
+          setEmail('');
+          setPassword('');
+        },
+      }
+    );
   }
 
   return (
