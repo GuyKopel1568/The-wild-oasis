@@ -3,7 +3,7 @@ import Tag from '../../ui/Tag';
 import { Flag } from '../../ui/Flag';
 import Button from '../../ui/Button';
 import { Link } from 'react-router-dom';
-import CheckOutButton from './CheckOutButton';
+import CheckOutButton from './CheckoutButton';
 
 const StyledTodayItem = styled.li`
   display: grid;
